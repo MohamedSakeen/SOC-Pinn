@@ -19,6 +19,7 @@
     "express": "^5.2.1",
     "firebase": "^12.8.0",
     "jsonwebtoken": "^9.0.3",
+    "nodemailer": "^8.0.1",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
