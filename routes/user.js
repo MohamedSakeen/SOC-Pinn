@@ -101,7 +101,7 @@ router.get('/ps/:number', async (req, res) => {
     const psScores = team.scores?.psScores?.[psNumber];
 
     // Get PS details
-    const psDocRef = doc(db, 'problemStatements', `ps${psNumber}`);
+    const psDocRef = doc(db, 'problemStatements', `ps${String(psNumber).padStart(2, '0')}`);
     const psDoc = await getDoc(psDocRef);
 
     if (!psDoc.exists()) {
@@ -196,7 +196,7 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
     }
 
     // Get the correct answer
-    const psDocRef = doc(db, 'problemStatements', `ps${psNumber}`);
+    const psDocRef = doc(db, 'problemStatements', `ps${String(psNumber).padStart(2, '0')}`);
     const psDoc = await getDoc(psDocRef);
 
     if (!psDoc.exists()) {
@@ -248,7 +248,7 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
 
     if (isCorrect) {
       // Check for first blood
-      const firstBloodRef = doc(db, 'firstBloods', `ps${psNumber}`);
+      const firstBloodRef = doc(db, 'firstBloods', `ps${String(psNumber).padStart(2, '0')}`);
       const firstBloodDoc = await getDoc(firstBloodRef);
       const firstBloodData = firstBloodDoc.data();
 

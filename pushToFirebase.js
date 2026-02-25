@@ -57,7 +57,7 @@ async function pushProblemStatements(problemStatements) {
       }))
     };
 
-    await setDoc(doc(db, 'problemStatements', `ps${ps.psNumber}`), psWithHashedAnswers);
+    await setDoc(doc(db, 'problemStatements', `ps${String(ps.psNumber).padStart(2, '0')}`), psWithHashedAnswers);
     console.log(`   ✅ PS ${ps.psNumber}: ${ps.title} (${ps.severity}) - answers hashed 🔐`);
   }
 
@@ -77,7 +77,7 @@ async function pushProblemStatements(problemStatements) {
       };
     }
 
-    await setDoc(doc(db, 'firstBloods', `ps${ps.psNumber}`), firstBloodData);
+    await setDoc(doc(db, 'firstBloods', `ps${String(ps.psNumber).padStart(2, '0')}`), firstBloodData);
     console.log(`   ✅ First blood tracking for PS ${ps.psNumber} (${ps.questions.length} questions)`);
   }
 

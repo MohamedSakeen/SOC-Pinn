@@ -677,7 +677,7 @@ async function seedDatabase() {
     // Seed problem statements
     console.log('\n📝 Seeding problem statements...');
     for (const ps of problemStatements) {
-      await setDoc(doc(db, 'problemStatements', `ps${ps.psNumber}`), ps);
+      await setDoc(doc(db, 'problemStatements', `ps${String(ps.psNumber).padStart(2, '0')}`), ps);
       console.log(`   ✅ PS ${ps.psNumber}: ${ps.title}`);
     }
 
@@ -697,7 +697,7 @@ async function seedDatabase() {
         };
       }
 
-      await setDoc(doc(db, 'firstBloods', `ps${ps.psNumber}`), firstBloodData);
+      await setDoc(doc(db, 'firstBloods', `ps${String(ps.psNumber).padStart(2, '0')}`), firstBloodData);
       console.log(`   ✅ First blood tracking for PS ${ps.psNumber}`);
     }
 
