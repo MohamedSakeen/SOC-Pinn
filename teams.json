@@ -1,0 +1,42 @@
+[
+  {
+    "username": "team1",
+    "password": "team1pass",
+    "teamName": "CyberHawks",
+    "teamMembers": [
+      "Alice",
+      "Bob",
+      "Charlie"
+    ],
+    "role": "user"
+  },
+  {
+    "username": "team2",
+    "password": "team2pass",
+    "teamName": "SecurityNinjas",
+    "teamMembers": [
+      "David",
+      "Eve",
+      "Frank"
+    ],
+    "role": "user"
+  },
+  {
+    "username": "team3",
+    "password": "team3pass",
+    "teamName": "ThreatHunters",
+    "teamMembers": [
+      "Grace",
+      "Henry",
+      "Ivy"
+    ],
+    "role": "user"
+  },
+  {
+    "username": "admin",
+    "password": "admin123",
+    "teamName": "Admin",
+    "teamMembers": [],
+    "role": "admin"
+  }
+]

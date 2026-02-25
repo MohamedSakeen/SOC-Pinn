@@ -17,3 +17,9 @@ npm-debug.log*
 Thumbs.db
 
 data/
+
+SOC - Questions.xlsx
+
+questions.json
+
+questions.seed.js

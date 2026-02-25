@@ -14,8 +14,8 @@ const path = require('path');
  * Usage: node pushToFirebase.js [--teams-only] [--ps-only]
  */
 
-const PS_JSON_FILE = path.join(__dirname, 'data', 'problemStatements.json');
-const TEAMS_JSON_FILE = path.join(__dirname, 'data', 'teams.json');
+const PS_JSON_FILE = path.join(__dirname, 'questions.json');
+const TEAMS_JSON_FILE = path.join(__dirname, 'teams.json');
 
 async function pushProblemStatements(problemStatements) {
   // Clear existing problem statements

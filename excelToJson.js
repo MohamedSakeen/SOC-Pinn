@@ -18,8 +18,8 @@ const path = require('path');
  */
 
 // Configuration
-const EXCEL_FILE = 'Untitled spreadsheet.xlsx'; // Change this to your Excel file name
-const OUTPUT_FILE = 'problemStatements.json';
+const EXCEL_FILE = 'SOC - Questions.xlsx'; // Change this to your Excel file name
+const OUTPUT_FILE = 'questions.json';
 
 function convertExcelToJson(excelPath, outputPath) {
   try {
