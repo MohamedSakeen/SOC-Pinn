@@ -150,4 +150,13 @@ router.post('/login', async (req, res) => {
   }
 });
 
+// Diagnostic endpoint (Check if Env Vars are set)
+router.get('/diag', (req, res) => {
+  res.json({
+    firebase: !!process.env.FIREBASE_API_KEY,
+    jwt: !!process.env.JWT_SECRET,
+    project: process.env.FIREBASE_PROJECT_ID || 'missing'
+  });
+});
+
 module.exports = router;
