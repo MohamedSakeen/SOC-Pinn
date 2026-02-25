@@ -20,17 +20,17 @@ router.get('/dashboard', async (req, res) => {
   try {
     const teamDocRef = doc(db, 'teams', req.user.id);
     const teamDoc = await getDoc(teamDocRef);
-    
+
     if (!teamDoc.exists()) {
       return res.status(404).json({ message: 'Team not found' });
     }
-    
+
     const team = teamDoc.data();
-    
+
     // Get all problem statements (just titles and numbers)
     const psRef = collection(db, 'problemStatements');
     const psSnapshot = await getDocs(psRef);
-    
+
     const problemStatements = psSnapshot.docs.map(doc => {
       const data = doc.data();
       return {
@@ -46,14 +46,14 @@ router.get('/dashboard', async (req, res) => {
       const psScore = team.scores?.psScores?.[ps.psNumber];
       let completedQuestions = 0;
       let psTotal = 0;
-      
+
       if (psScore?.questions) {
         Object.values(psScore.questions).forEach(q => {
           if (q.isCompleted) completedQuestions++;
           psTotal += q.score || 0;
         });
       }
-      
+
       return {
         ...ps,
         completedQuestions,
@@ -76,7 +76,7 @@ router.get('/dashboard', async (req, res) => {
 router.get('/ps/:number', async (req, res) => {
   try {
     const psNumber = parseInt(req.params.number);
-    
+
     if (psNumber < 1 || psNumber > 6) {
       return res.status(400).json({ message: 'Invalid problem statement number' });
     }
@@ -84,7 +84,7 @@ router.get('/ps/:number', async (req, res) => {
     // Check if PS access is allowed
     const settingsRef = doc(db, 'settings', 'global');
     const settingsDoc = await getDoc(settingsRef);
-    
+
     if (!settingsDoc.exists() || !settingsDoc.data().allowPSAccess) {
       return res.status(403).json({ message: 'Challenge has not started yet. Please wait for admin to begin the event.' });
     }
@@ -92,11 +92,11 @@ router.get('/ps/:number', async (req, res) => {
     // Get team data for progress
     const teamDocRef = doc(db, 'teams', req.user.id);
     const teamDoc = await getDoc(teamDocRef);
-    
+
     if (!teamDoc.exists()) {
       return res.status(404).json({ message: 'Team not found' });
     }
-    
+
     const team = teamDoc.data();
     const psScores = team.scores?.psScores?.[psNumber];
 
@@ -165,7 +165,7 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
     // Check if PS access is allowed
     const settingsRef = doc(db, 'settings', 'global');
     const settingsDoc = await getDoc(settingsRef);
-    
+
     if (!settingsDoc.exists() || !settingsDoc.data().allowPSAccess) {
       return res.status(403).json({ message: 'Challenge has not started yet. Please wait for admin to begin the event.' });
     }
@@ -182,11 +182,11 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
     // Get team data
     const teamDocRef = doc(db, 'teams', req.user.id);
     const teamDoc = await getDoc(teamDocRef);
-    
+
     if (!teamDoc.exists()) {
       return res.status(404).json({ message: 'Team not found' });
     }
-    
+
     const team = teamDoc.data();
 
     // Check if already completed
@@ -276,7 +276,7 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
 
       // Update PS total score
       scores.psScores[psNumber].totalScore += scoreChange;
-      
+
       // Update overall total score
       scores.totalScore += scoreChange;
 
@@ -298,8 +298,8 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
       totalScore: scores.totalScore,
       psScore: scores.psScores[psNumber].totalScore,
       attempts: currentQuestion.attempts,
-      message: isCorrect 
-        ? 'Solved!' 
+      message: isCorrect
+        ? 'Solved!'
         : `Wrong answer`
     });
 
@@ -314,16 +314,16 @@ router.get('/leaderboard', async (req, res) => {
   try {
     const teamsRef = collection(db, 'teams');
     const teamsSnapshot = await getDocs(teamsRef);
-    
+
     const leaderboard = teamsSnapshot.docs
       .map(doc => {
         const data = doc.data();
         if (data.role === 'admin') return null;
-        
+
         // Count completed questions
         let totalCompleted = 0;
         let totalFirstBloods = 0;
-        
+
         if (data.scores?.psScores) {
           Object.values(data.scores.psScores).forEach(ps => {
             if (ps.questions) {
@@ -334,7 +334,7 @@ router.get('/leaderboard', async (req, res) => {
             }
           });
         }
-        
+
         return {
           teamName: data.teamName,
           totalScore: data.scores?.totalScore || 0,
@@ -357,13 +357,13 @@ router.get('/settings', async (req, res) => {
   try {
     const settingsRef = doc(db, 'settings', 'global');
     const settingsDoc = await getDoc(settingsRef);
-    
+
     if (!settingsDoc.exists()) {
       return res.json({ showResultsToUsers: false, allowPSAccess: false });
     }
-    
+
     const data = settingsDoc.data();
-    res.json({ 
+    res.json({
       showResultsToUsers: data.showResultsToUsers || false,
       allowPSAccess: data.allowPSAccess || false
     });
@@ -379,7 +379,7 @@ router.get('/scoreboard', async (req, res) => {
     // Check if results are visible to users
     const settingsRef = doc(db, 'settings', 'global');
     const settingsDoc = await getDoc(settingsRef);
-    
+
     if (!settingsDoc.exists() || !settingsDoc.data().showResultsToUsers) {
       return res.status(403).json({ message: 'Scoreboard is not available yet. Please wait for admin to enable it.' });
     }
@@ -387,15 +387,15 @@ router.get('/scoreboard', async (req, res) => {
     const teamsRef = collection(db, 'teams');
     const q = query(teamsRef, where('role', '==', 'user'));
     const teamsSnapshot = await getDocs(q);
-    
+
     const scoreboard = [];
     teamsSnapshot.forEach(docSnap => {
       const team = docSnap.data();
-      
+
       // Count completed questions and first bloods
       let totalCompleted = 0;
       let totalFirstBloods = 0;
-      
+
       if (team.scores?.psScores) {
         Object.values(team.scores.psScores).forEach(ps => {
           if (ps.questions) {
@@ -406,7 +406,7 @@ router.get('/scoreboard', async (req, res) => {
           }
         });
       }
-      
+
       scoreboard.push({
         teamId: docSnap.id,
         teamName: team.teamName,
@@ -433,7 +433,7 @@ router.get('/score-timeline', async (req, res) => {
     // Check if results are visible to users
     const settingsRef = doc(db, 'settings', 'global');
     const settingsDoc = await getDoc(settingsRef);
-    
+
     if (!settingsDoc.exists() || !settingsDoc.data().showResultsToUsers) {
       return res.status(403).json({ message: 'Timeline is not available yet. Please wait for admin to enable it.' });
     }
@@ -441,13 +441,13 @@ router.get('/score-timeline', async (req, res) => {
     const teamsRef = collection(db, 'teams');
     const q = query(teamsRef, where('role', '==', 'user'));
     const teamsSnapshot = await getDocs(q);
-    
+
     const teamsTimeline = [];
-    
+
     teamsSnapshot.forEach(docSnap => {
       const team = docSnap.data();
       const scoreHistory = [];
-      
+
       // Collect all score events with timestamps
       if (team.scores?.psScores) {
         Object.entries(team.scores.psScores).forEach(([psNum, ps]) => {
@@ -465,10 +465,10 @@ router.get('/score-timeline', async (req, res) => {
           }
         });
       }
-      
+
       // Sort by timestamp
       scoreHistory.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
-      
+
       // Calculate cumulative scores
       let cumulativeScore = 0;
       const timeline = scoreHistory.map(event => {
@@ -480,7 +480,7 @@ router.get('/score-timeline', async (req, res) => {
           questionIndex: event.questionIndex
         };
       });
-      
+
       // Add starting point at 0
       if (timeline.length > 0) {
         timeline.unshift({
@@ -488,21 +488,21 @@ router.get('/score-timeline', async (req, res) => {
           score: 0
         });
       }
-      
+
       teamsTimeline.push({
         teamId: docSnap.id,
         teamName: team.teamName,
         timeline
       });
     });
-    
+
     // Sort teams by final score descending
     teamsTimeline.sort((a, b) => {
       const aFinal = a.timeline.length > 0 ? a.timeline[a.timeline.length - 1].score : 0;
       const bFinal = b.timeline.length > 0 ? b.timeline[b.timeline.length - 1].score : 0;
       return bFinal - aFinal;
     });
-    
+
     res.json(teamsTimeline);
   } catch (error) {
     console.error('User timeline error:', error);

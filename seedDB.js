@@ -688,7 +688,7 @@ async function seedDatabase() {
         psNumber: ps.psNumber,
         questions: {}
       };
-      
+
       // Initialize each question's first blood as null
       for (let i = 0; i < ps.questions.length; i++) {
         firstBloodData.questions[i] = {
@@ -696,7 +696,7 @@ async function seedDatabase() {
           claimedAt: null
         };
       }
-      
+
       await setDoc(doc(db, 'firstBloods', `ps${ps.psNumber}`), firstBloodData);
       console.log(`   ✅ First blood tracking for PS ${ps.psNumber}`);
     }
@@ -714,7 +714,7 @@ async function seedDatabase() {
     for (const team of sampleTeams) {
       // Hash password
       const hashedPassword = await bcrypt.hash(team.password, 10);
-      
+
       // Create score structure for non-admin users
       let scoreData = null;
       if (team.role === 'user') {
@@ -722,13 +722,13 @@ async function seedDatabase() {
           totalScore: 0,
           psScores: {}
         };
-        
+
         for (let psNum = 1; psNum <= 6; psNum++) {
           scoreData.psScores[psNum] = {
             questions: {},
             totalScore: 0
           };
-          
+
           for (let q = 0; q < 12; q++) {
             scoreData.psScores[psNum].questions[q] = {
               isCompleted: false,
@@ -770,7 +770,7 @@ async function seedDatabase() {
     sampleTeams.forEach(t => {
       console.log(`   - ${t.username} / ${t.password} (${t.role})`);
     });
-    
+
     process.exit(0);
   } catch (error) {
     console.error('❌ Error seeding database:', error);
