@@ -77,7 +77,7 @@ router.get('/ps/:number', async (req, res) => {
   try {
     const psNumber = parseInt(req.params.number);
 
-    if (psNumber < 1 || psNumber > 6) {
+    if (psNumber < 1) {
       return res.status(400).json({ message: 'Invalid problem statement number' });
     }
 
@@ -154,11 +154,11 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
     const questionIndex = parseInt(req.params.questionIndex);
     const { answer } = req.body;
 
-    if (psNumber < 1 || psNumber > 6) {
+    if (psNumber < 1) {
       return res.status(400).json({ message: 'Invalid problem statement number' });
     }
 
-    if (questionIndex < 0 || questionIndex > 11) {
+    if (questionIndex < 0) {
       return res.status(400).json({ message: 'Invalid question index' });
     }
 
@@ -204,6 +204,11 @@ router.post('/ps/:number/check/:questionIndex', async (req, res) => {
     }
 
     const ps = psDoc.data();
+
+    if (questionIndex >= ps.questions.length) {
+      return res.status(400).json({ message: 'Invalid question index' });
+    }
+
     const question = ps.questions[questionIndex];
     const hashedAnswer = question.answer; // This is now a bcrypt hash
 
